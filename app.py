@@ -6,11 +6,14 @@ import joblib
 
 # Inject custom CSS for maroon background
 st.markdown(
-    """
+   """
     <style>
     .stApp {
-        background-color: #601c2e; /* Maroon color */
-        color: white; /* Text color */
+        background-color: #601c2e; /* New background color */
+        color: white; /* Default text color */
+    }
+    .stFileUploader label {
+        color: 6A3C47; /* White text for file uploader */
     }
     </style>
     """,
