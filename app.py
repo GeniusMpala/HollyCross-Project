@@ -1,12 +1,24 @@
-# Streamlit app title
 import pandas as pd
 import streamlit as st
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 
+# Inject custom CSS for maroon background
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #601c2e; /* Maroon color */
+        color: white; /* Text color */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Streamlit app title
-st.title('''A Data-Driven Solution for Holy Cross College''')
+st.title('''HCC Res Life Housing Assignment Program''')
 
 # Uploading the dataset
 uploaded_file = st.file_uploader("Upload your housing dataset (CSV file)", type="csv")
