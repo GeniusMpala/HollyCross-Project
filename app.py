@@ -1,24 +1,9 @@
+# Streamlit app title
 import pandas as pd
-import numpy as np
 import streamlit as st
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix, classification_report
 import joblib
-
-# Custom CSS for background styling
-page_bg_css = """
-<style>
-body {
-    background-color: #5B3A6A; /* Example color resembling the image */
-    color: white;
-}
-h1, h2, h3, h4, h5, h6 {
-    color: white;
-}
-</style>
-"""
-st.markdown(page_bg_css, unsafe_allow_html=True)
 
 # Streamlit app title
 st.title('''A Data-Driven Solution for Holy Cross College''')
@@ -70,43 +55,21 @@ if uploaded_file is not None:
         joblib.dump(rf_model, model_path)
         st.success(f"Random Forest model trained and saved successfully at {model_path}!")
 
-        # Making predictions
-        st.header("Make Predictions")
-        uploaded_test_file = st.file_uploader("Upload a dataset for predictions (CSV file)", type="csv")
-        if uploaded_test_file is not None:
-            test_data = pd.read_csv(uploaded_test_file)
+        # Making predictions on the same dataset
+        predictions = rf_model.predict(X)
+        housing_data['Predictions'] = predictions
 
-            # Ensuring compatibility with training data
-            test_data = pd.get_dummies(test_data, drop_first=True)
-            missing_cols = set(X.columns) - set(test_data.columns)
-            for col in missing_cols:
-                test_data[col] = 0
-            test_data = test_data[X.columns]
+        st.write("Predictions:")
+        st.write(housing_data.head())
 
-            # Making predictions
-            predictions = rf_model.predict(test_data)
-            test_data[target_column] = predictions
-
-            st.write("Predictions:")
-            st.write(test_data.head())
-
-            # Download link for predictions
-            csv = test_data.to_csv(index=False)
-            st.download_button(
-                label="Download Predictions as CSV",
-                data=csv,
-                file_name="predictions.csv",
-                mime="text/csv"
-            )
-
-        # Evaluating the model
-        preds = rf_model.predict(X_test)
-
-        st.write("Confusion Matrix:")
-        st.write(confusion_matrix(y_test, preds))
-
-        st.write("Classification Report:")
-        st.text(classification_report(y_test, preds))
+        # Download link for predictions
+        csv = housing_data.to_csv(index=False)
+        st.download_button(
+            label="Download Predictions as CSV",
+            data=csv,
+            file_name="predictions.csv",
+            mime="text/csv"
+        )
 
         # Download link for the model
         with open(model_path, "rb") as file:
